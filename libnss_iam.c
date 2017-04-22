@@ -1,7 +1,4 @@
-#include <nss.h>
-#include <pwd.h>
-#include <grp.h>
-#include <shadow.h>
+#include "headers.h" 
 
 enum nss_status _nss_iam_setpwent (void);
 enum nss_status _nss_iam_endpwent (void);

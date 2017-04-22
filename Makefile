@@ -3,6 +3,7 @@
 #### Start of system configuration section. ####
 
 CC = gcc
+CPP = g++
 INSTALL = /usr/bin/install
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_DATA = ${INSTALL} -m 644
@@ -27,8 +28,8 @@ all:	libnss_iam libnss_iam_test
 libnss_iam:	libnss_iam.c
 	${CC} -fPIC -Wall -shared -o libnss_iam.so.2 -Wl,-soname,libnss_iam.so.2 libnss_iam.c
 
-test:	libnss_iam_test.c
-	${CC} -fPIC -Wall -o libnss_iam_test libnss_iam_test.c
+test:	iam.cpp
+	${CPP} -O3 -o iam iam.cpp third-part/aws-sdk-cpp/aws-cpp-sdk-core/libaws-cpp-sdk-core.a third-part/aws-sdk-cpp/aws-cpp-sdk-iam/libaws-cpp-sdk-iam.a -Ithird-part/aws-sdk-cpp/aws-cpp-sdk-core/include -Ithird-part/aws-sdk-cpp/aws-cpp-sdk-iam/include -std=c++11 -lcurl -lcrypto -fno-exceptions -lssl -Lthird-part/aws-sdk-cpp/aws-cpp-sdk-core/ -Lthird-part/aws-sdk-cpp/aws-cpp-sdk-iam/ -laws-cpp-sdk-core helper.c -fpermissive -DTEST
 
 install:	
 	# remeber  /lib/libnss_compat.so.2 -> libnss_compat-2.3.6.so
