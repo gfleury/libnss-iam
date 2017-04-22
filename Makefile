@@ -1,32 +1,21 @@
-# Makefile for libnss-iam
-
-#### Start of system configuration section. ####
 INCLUDES = -Ithird-part/aws-sdk-cpp/aws-cpp-sdk-core/include -Ithird-part/aws-sdk-cpp/aws-cpp-sdk-iam/include
+LIBS = third-part/aws-sdk-cpp/aws-cpp-sdk-core/libaws-cpp-sdk-core.a third-part/aws-sdk-cpp/aws-cpp-sdk-iam/libaws-cpp-sdk-iam.a -Lthird-part/aws-sdk-cpp/aws-cpp-sdk-core/ -Lthird-part/aws-sdk-cpp/aws-cpp-sdk-iam/ -laws-cpp-sdk-core -lssl -lcrypto -lcurl
 CC = gcc
 CPP = g++
+DEBUG = -g
 INSTALL = /usr/bin/install
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_DATA = ${INSTALL} -m 644
 
 prefix = ""
-exec_prefix = ${prefix}
-
-# Where the installed binary goes.
-bindir = ${exec_prefix}/bin
-binprefix =
-
-sysconfdir = /etc
-
-# mandir = /usr/local/src/less-394/debian/less/usr/share/man
-manext = 1
-manprefix =
-
-#### End of system configuration section. ####
 
 all:	libnss_iam 
 
-libnss_iam:	libnss_iam.c iam.cpp
-	${CC} ${INCLUDES} -fPIC -Wall -shared -o libnss_iam.so.2 -Wl,-soname,libnss_iam.so.2 libnss_iam.c 
+libnss_iam: iam libnss_iam.c
+	${CC} ${INCLUDES} ${DEBUG} -fPIC -Wall -shared -o libnss_iam.so.2 -Wl,-soname,libnss_iam.so.2 libnss_iam.c iam.o helper.o ${LIBS}
+
+iam: helper.c iam.cpp
+	${CPP} ${INCLUDES} ${DEBUG} -c -O3 helper.c iam.cpp -std=c++11 -fno-exceptions helper.c -fpermissive -fPIC
 
 test:	iam.cpp
 	${CPP} -O3 -o iam iam.cpp third-part/aws-sdk-cpp/aws-cpp-sdk-core/libaws-cpp-sdk-core.a third-part/aws-sdk-cpp/aws-cpp-sdk-iam/libaws-cpp-sdk-iam.a -Ithird-part/aws-sdk-cpp/aws-cpp-sdk-core/include -Ithird-part/aws-sdk-cpp/aws-cpp-sdk-iam/include -std=c++11 -lcurl -lcrypto -fno-exceptions -lssl -Lthird-part/aws-sdk-cpp/aws-cpp-sdk-core/ -Lthird-part/aws-sdk-cpp/aws-cpp-sdk-iam/ -laws-cpp-sdk-core helper.c -fpermissive -DTEST
@@ -38,7 +27,7 @@ install:
 	ldconfig -n
 
 clean:
-	rm -f libnss_iam.so.2 libnss_iam_test
+	rm -f libnss_iam.so.2 libnss_iam_test iam
 	rm -rf debian/libnss-iam
 	rm -f build-stamp
 	rm -rf BUILD BUILDROOT RPMS SRPMS SOURCES SPECS
