@@ -15,18 +15,3 @@ unsigned long hash(const char *str) {
     return hash%65535;
 }
 
-
-/**
- * test iam users retrieve
- */
-#ifdef TEST
-int main(int argc, char** argv)
-{
-        char buffer[1024];
-        struct passwd p;
-        strcpy(buffer, argv[1]);
-
-        if(get_posix_iam_user(buffer, 1024, &p))
-                printf("%s (%d)\n", p.pw_name, p.pw_uid);
-}
-#endif

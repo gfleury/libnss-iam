@@ -17,8 +17,8 @@ libnss_iam: iam libnss_iam.c
 iam: helper.c iam.cpp
 	${CPP} ${INCLUDES} ${DEBUG} -c -O3 helper.c iam.cpp -std=c++11 -fno-exceptions helper.c -fpermissive -fPIC
 
-test:	iam.cpp
-	${CPP} -O3 -o iam iam.cpp third-part/aws-sdk-cpp/aws-cpp-sdk-core/libaws-cpp-sdk-core.a third-part/aws-sdk-cpp/aws-cpp-sdk-iam/libaws-cpp-sdk-iam.a -Ithird-part/aws-sdk-cpp/aws-cpp-sdk-core/include -Ithird-part/aws-sdk-cpp/aws-cpp-sdk-iam/include -std=c++11 -lcurl -lcrypto -fno-exceptions -lssl -Lthird-part/aws-sdk-cpp/aws-cpp-sdk-core/ -Lthird-part/aws-sdk-cpp/aws-cpp-sdk-iam/ -laws-cpp-sdk-core helper.c -fpermissive -DTEST
+test: iam
+	${CC} -O3 -o iam test.c -fno-exceptions -fPIC -DTEST iam.o helper.o ${LIBS} -lstdc++
 
 install:	
 	# remeber  /lib/libnss_compat.so.2 -> libnss_compat-2.3.6.so

@@ -3,6 +3,9 @@
 
 #include "headers.h" 
 
+enum nss_status get_posix_iam_user(char *buffer, int buflen, struct passwd *p);
+enum nss_status get_posix_iam_user_by_uid(uid_t uid, char *buffer, int buflen, struct passwd *p);
+
 enum nss_status _nss_iam_setpwent (void);
 enum nss_status _nss_iam_endpwent (void);
 enum nss_status _nss_iam_getpwent_r (struct passwd *result, char *buffer, size_t buflen, int *errnop);
@@ -20,13 +23,13 @@ enum nss_status _nss_iam_getpwbynam_r (const char *name, struct passwd *result, 
 enum nss_status _nss_iam_setpwent (void) {
 	printf("%s\n", __FUNCTION__);		
 
-	return NSS_STATUS_SUCCESS;
+	return NSS_STATUS_NOTFOUND;
 }
 
 enum nss_status _nss_iam_endpwent (void) {
 	printf("%s\n", __FUNCTION__);		
 
-	return NSS_STATUS_SUCCESS;
+	return NSS_STATUS_NOTFOUND;
 }
 
 /*
@@ -52,7 +55,7 @@ enum nss_status _nss_iam_getpwent_r (struct passwd *result, char *buffer, size_t
 	// Lista users, each call list one user sucessive
 	printf("%s %s %zd %d\n", __FUNCTION__, buffer, buflen, *errnop);		
 
-	return NSS_STATUS_SUCCESS;
+	return NSS_STATUS_NOTFOUND;
 }
 
 enum nss_status _nss_iam_getpwbyuid_r (uid_t uid, struct passwd *result, char *buffer, size_t buflen, int *errnop) {
@@ -67,6 +70,12 @@ enum nss_status _nss_iam_getpwbynam_r (const char *name, struct passwd *result, 
 	strcpy(buffer, name);	
 
 	return get_posix_iam_user(buffer, buflen, result);
+}
+
+enum nss_status _nss_iam_getpwuid_r(uid_t uid, struct passwd* result_buf, char* buffer, size_t buflen, struct passwd** result) {
+	printf("%s %d %s %zd \n", __FUNCTION__, uid, buffer, buflen);		
+
+	return get_posix_iam_user_by_uid(uid, buffer, buflen, result_buf); 
 }
 
 /*
@@ -92,7 +101,27 @@ enum nss_status _nss_iam_getpwbynam_r (const char *name, struct passwd *result, 
 enum nss_status _nss_iam_getspnam_r(const char *name, struct spwd *s, char *buffer, size_t buflen, int *errnop) {
 
         // return NSS_STATUS_TRYAGAIN;
-	printf("%s %s %s %zd %d\n", __FUNCTION__, name, buffer, buflen, *errnop);		
+	printf("%s %s %zd %d\n", __FUNCTION__, name, buflen, *errnop);		
 
-        return NSS_STATUS_SUCCESS;
+        return NSS_STATUS_NOTFOUND;
 }
+
+enum nss_status _nss_iam_getgrent_r(struct group* result_buf, char* buffer, size_t buflen, struct group** result)  {
+	printf("%s %zd \n", __FUNCTION__, buflen);		
+
+        return NSS_STATUS_NOTFOUND;
+}
+
+enum nss_status _nss_iam_getgrgid_r(gid_t gid, struct group* result_buf, char* buffer, size_t buflen, struct group** result) {
+	printf("%s %zd\n", __FUNCTION__, buflen);		
+
+        return NSS_STATUS_NOTFOUND;
+}
+
+enum nss_status _nss_iam_nss_iam_getgrnam_r(const char* name, struct group* result_buf, char* buffer, size_t buflen, struct group** result)  {
+	printf("%s %s %zd\n", __FUNCTION__, name, buflen);		
+
+        return NSS_STATUS_NOTFOUND;
+}
+
+
