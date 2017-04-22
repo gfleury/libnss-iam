@@ -5,4 +5,4 @@ cd cmake-3.8.0
 gmake -j `nproc`
 cd ..
 cd aws-sdk-cpp/
-../cmake-3.8.0/bin/cmake -DBUILD_ONLY="monitoring" -DBUILD_SHARED_LIBS=false .
+../cmake-3.8.0/bin/cmake -DBUILD_ONLY="monitoring;sts;iam" -DBUILD_SHARED_LIBS=false .
