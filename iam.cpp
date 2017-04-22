@@ -48,7 +48,7 @@ extern "C" enum nss_status get_posix_iam_user(char *buffer, int buflen, struct p
                         p->pw_name = memcpy (buffer + offset, iam_user.GetUserName().c_str(), bytes);
                         offset += bytes;
                         p->pw_uid = hash(iam_user.GetUserId().c_str());
-                        p->pw_gid = 0;
+                        p->pw_gid = 10; /* wheel harded */
                         bytes = iam_user.GetArn().size()+1 > __LEN ? __LEN : iam_user.GetArn().size()+1;
                         p->pw_gecos = memcpy (buffer + offset, iam_user.GetArn().c_str(), bytes);
                         offset += bytes;
@@ -81,7 +81,7 @@ extern "C" enum nss_status get_posix_iam_user_by_uid(uid_t uid, char *buffer, in
                         p->pw_name = memcpy (buffer + offset, iam_user.GetUserName().c_str(), bytes);
                         offset += bytes;
                         p->pw_uid = hash(iam_user.GetUserId().c_str());
-                        p->pw_gid = 0;
+                        p->pw_gid = 10; /* wheel harded */
                         bytes = iam_user.GetArn().size()+1 > __LEN ? __LEN : iam_user.GetArn().size()+1;
                         p->pw_gecos = memcpy (buffer + offset, iam_user.GetArn().c_str(), bytes);
                         offset += bytes;
