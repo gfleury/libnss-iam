@@ -1,5 +1,3 @@
-#include <aws/iam/model/GetUserRequest.h>
-#include <aws/iam/model/GetUserResult.h>
 #include <stdio.h>
 
 #include "headers.h"

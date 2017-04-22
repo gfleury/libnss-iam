@@ -2,6 +2,8 @@
 #include <pwd.h>
 #include <grp.h>
 #include <shadow.h>
+#include <aws/iam/model/GetUserRequest.h>
+#include <aws/iam/model/GetUserResult.h>
 
 Aws::IAM::Model::User get_iam_user(char *username);
 unsigned long hash(const char *str);

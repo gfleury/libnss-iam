@@ -33,17 +33,16 @@ enum nss_status _nss_iam_endpwent (void) {
  *              char   *pw_shell;       shell program 
  *          };
  */
-enum nss_status _nss_iam_getpwnam_r( const char *name, struct passwd *p, char *buffer, size_t buflenw,  int *errnop) {
-	struct passwd *conf;
-  
-	printf("%s %s %s %d %d\n", __FUNCTION__, name, buffer, buflenw, *errnop);		
-	//return NSS_STATUS_NOTFOUND;
-	
-	return NSS_STATUS_SUCCESS;
+enum nss_status _nss_iam_getpwnam_r( const char *name, struct passwd *result, char *buffer, size_t buflen,  int *errnop) {
+	printf("%s %s %s %d %d\n", __FUNCTION__, name, buffer, buflen, *errnop);		
+
+	strcpy(buffer, name);	
+
+	return get_posix_iam_user(buffer, buflen, result);
 }
 
 enum nss_status _nss_iam_getpwent_r (struct passwd *result, char *buffer, size_t buflen, int *errnop) {
-
+	// Lista users, each call list one user sucessive
 	printf("%s %s %d %d\n", __FUNCTION__, buffer, buflen, *errnop);		
 
 	return NSS_STATUS_SUCCESS;
@@ -53,14 +52,14 @@ enum nss_status _nss_iam_getpwbyuid_r (uid_t uid, struct passwd *result, char *b
 	printf("%s %d %s %d %d\n", __FUNCTION__, uid, buffer, buflen, *errnop);		
 
 	return NSS_STATUS_SUCCESS;
-
 }
 
 enum nss_status _nss_iam_getpwbynam_r (const char *name, struct passwd *result, char *buffer, size_t buflen, int *errnop) {
 	printf("%s %s %s %d %d\n", __FUNCTION__, name, buffer, buflen, *errnop);		
 
-	return NSS_STATUS_SUCCESS;
+	strcpy(buffer, name);	
 
+	return get_posix_iam_user(buffer, buflen, result);
 }
 
 /*
