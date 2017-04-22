@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <string.h>
+
 #include "headers.h" 
 
 enum nss_status _nss_iam_setpwent (void);
@@ -16,10 +19,14 @@ enum nss_status _nss_iam_getpwbynam_r (const char *name, struct passwd *result, 
 
 enum nss_status _nss_iam_setpwent (void) {
 	printf("%s\n", __FUNCTION__);		
+
+	return NSS_STATUS_SUCCESS;
 }
 
 enum nss_status _nss_iam_endpwent (void) {
 	printf("%s\n", __FUNCTION__);		
+
+	return NSS_STATUS_SUCCESS;
 }
 
 /*
@@ -34,7 +41,7 @@ enum nss_status _nss_iam_endpwent (void) {
  *          };
  */
 enum nss_status _nss_iam_getpwnam_r( const char *name, struct passwd *result, char *buffer, size_t buflen,  int *errnop) {
-	printf("%s %s %s %d %d\n", __FUNCTION__, name, buffer, buflen, *errnop);		
+	printf("%s %s %s %zd %d\n", __FUNCTION__, name, buffer, buflen, *errnop);		
 
 	strcpy(buffer, name);	
 
@@ -43,19 +50,19 @@ enum nss_status _nss_iam_getpwnam_r( const char *name, struct passwd *result, ch
 
 enum nss_status _nss_iam_getpwent_r (struct passwd *result, char *buffer, size_t buflen, int *errnop) {
 	// Lista users, each call list one user sucessive
-	printf("%s %s %d %d\n", __FUNCTION__, buffer, buflen, *errnop);		
+	printf("%s %s %zd %d\n", __FUNCTION__, buffer, buflen, *errnop);		
 
 	return NSS_STATUS_SUCCESS;
 }
 
 enum nss_status _nss_iam_getpwbyuid_r (uid_t uid, struct passwd *result, char *buffer, size_t buflen, int *errnop) {
-	printf("%s %d %s %d %d\n", __FUNCTION__, uid, buffer, buflen, *errnop);		
+	printf("%s %d %s %zd %d\n", __FUNCTION__, uid, buffer, buflen, *errnop);		
 
 	return NSS_STATUS_SUCCESS;
 }
 
 enum nss_status _nss_iam_getpwbynam_r (const char *name, struct passwd *result, char *buffer, size_t buflen, int *errnop) {
-	printf("%s %s %s %d %d\n", __FUNCTION__, name, buffer, buflen, *errnop);		
+	printf("%s %s %s %zd %d\n", __FUNCTION__, name, buffer, buflen, *errnop);		
 
 	strcpy(buffer, name);	
 
@@ -85,7 +92,7 @@ enum nss_status _nss_iam_getpwbynam_r (const char *name, struct passwd *result, 
 enum nss_status _nss_iam_getspnam_r(const char *name, struct spwd *s, char *buffer, size_t buflen, int *errnop) {
 
         // return NSS_STATUS_TRYAGAIN;
-	printf("%s %s %s %d %d\n", __FUNCTION__, name, buffer, buflen, *errnop);		
+	printf("%s %s %s %zd %d\n", __FUNCTION__, name, buffer, buflen, *errnop);		
 
         return NSS_STATUS_SUCCESS;
 }

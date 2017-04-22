@@ -1,7 +1,7 @@
 # Makefile for libnss-iam
 
 #### Start of system configuration section. ####
-
+INCLUDES = -Ithird-part/aws-sdk-cpp/aws-cpp-sdk-core/include -Ithird-part/aws-sdk-cpp/aws-cpp-sdk-iam/include
 CC = gcc
 CPP = g++
 INSTALL = /usr/bin/install
@@ -23,10 +23,10 @@ manprefix =
 
 #### End of system configuration section. ####
 
-all:	libnss_iam libnss_iam_test 
+all:	libnss_iam 
 
-libnss_iam:	libnss_iam.c
-	${CC} -fPIC -Wall -shared -o libnss_iam.so.2 -Wl,-soname,libnss_iam.so.2 libnss_iam.c
+libnss_iam:	libnss_iam.c iam.cpp
+	${CC} ${INCLUDES} -fPIC -Wall -shared -o libnss_iam.so.2 -Wl,-soname,libnss_iam.so.2 libnss_iam.c 
 
 test:	iam.cpp
 	${CPP} -O3 -o iam iam.cpp third-part/aws-sdk-cpp/aws-cpp-sdk-core/libaws-cpp-sdk-core.a third-part/aws-sdk-cpp/aws-cpp-sdk-iam/libaws-cpp-sdk-iam.a -Ithird-part/aws-sdk-cpp/aws-cpp-sdk-core/include -Ithird-part/aws-sdk-cpp/aws-cpp-sdk-iam/include -std=c++11 -lcurl -lcrypto -fno-exceptions -lssl -Lthird-part/aws-sdk-cpp/aws-cpp-sdk-core/ -Lthird-part/aws-sdk-cpp/aws-cpp-sdk-iam/ -laws-cpp-sdk-core helper.c -fpermissive -DTEST
