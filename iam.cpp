@@ -41,7 +41,7 @@ extern "C" enum nss_status get_posix_iam_user(char *buffer, int buflen, struct p
         Aws::IAM::Model::User iam_user = get_iam_user(buffer);
         if (!iam_user.GetUserId().empty()) {
                 if (p) {
-                        char home[] = "/home/iam-user";
+			Aws::String home = "/home/" + iam_user.GetUserName();
                         char shell[] = "/bin/bash";
                         char pwd[] = "*";
                         int bytes = iam_user.GetUserName().size()+1 > __LEN ? __LEN : iam_user.GetUserName().size()+1, offset = 0;
@@ -52,8 +52,8 @@ extern "C" enum nss_status get_posix_iam_user(char *buffer, int buflen, struct p
                         bytes = iam_user.GetArn().size()+1 > __LEN ? __LEN : iam_user.GetArn().size()+1;
                         p->pw_gecos = memcpy (buffer + offset, iam_user.GetArn().c_str(), bytes);
                         offset += bytes;
-                        bytes = sizeof(home) > __LEN ? __LEN : sizeof(home);
-                        p->pw_dir = memcpy (buffer + offset, home, bytes);
+                        bytes = home.size()+1 > __LEN ? __LEN : home.size()+1;
+                        p->pw_dir = memcpy (buffer + offset, home.c_str(), bytes);
                         offset += bytes;
                         bytes = sizeof(shell) > __LEN ? __LEN : sizeof(shell);
                         p->pw_shell = memcpy (buffer + offset, shell, bytes);
@@ -74,7 +74,7 @@ extern "C" enum nss_status get_posix_iam_user_by_uid(uid_t uid, char *buffer, in
         Aws::IAM::Model::User iam_user = get_iam_uid(uid);
         if (!iam_user.GetUserId().empty()) {
                 if (p) {
-                        char home[] = "/home/iam-user";
+                        Aws::String home = "/home/" + iam_user.GetUserName();
                         char shell[] = "/bin/bash";
                         char pwd[] = "*";
                         int bytes = iam_user.GetUserName().size()+1 > __LEN ? __LEN : iam_user.GetUserName().size()+1, offset = 0;
@@ -85,8 +85,8 @@ extern "C" enum nss_status get_posix_iam_user_by_uid(uid_t uid, char *buffer, in
                         bytes = iam_user.GetArn().size()+1 > __LEN ? __LEN : iam_user.GetArn().size()+1;
                         p->pw_gecos = memcpy (buffer + offset, iam_user.GetArn().c_str(), bytes);
                         offset += bytes;
-                        bytes = sizeof(home) > __LEN ? __LEN : sizeof(home);
-                        p->pw_dir = memcpy (buffer + offset, home, bytes);
+                        bytes = home.size()+1 > __LEN ? __LEN : home.size()+1;
+                        p->pw_dir = memcpy (buffer + offset, home.c_str(), bytes);
                         offset += bytes;
                         bytes = sizeof(shell) > __LEN ? __LEN : sizeof(shell);
                         p->pw_shell = memcpy (buffer + offset, shell, bytes);
@@ -104,6 +104,7 @@ extern "C" enum nss_status get_posix_iam_user_by_uid(uid_t uid, char *buffer, in
  */
 Aws::IAM::Model::User get_iam_uid(uid_t uid) {
     Aws::SDKOptions options;
+    Aws::IAM::Model::User user;
     if (!__was_initialized) {
 	Aws::InitAPI(options);
 	__was_initialized = 1;
@@ -138,8 +139,7 @@ Aws::IAM::Model::User get_iam_uid(uid_t uid) {
         }
     }
 //    Aws::ShutdownAPI(options);
-	Aws::IAM::Model::User xx;
-	return xx;
+	return user;
 }
 
 /**
