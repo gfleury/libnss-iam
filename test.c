@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
 
     if (get_posix_iam_user(buffer, 1024, &p)) {
         printf("%s (%d)\n", p.pw_name, p.pw_uid);
-        if (get_posix_iam_user_by_uid(13903, buffer, 1024, &p))
+        if (get_posix_iam_user_by_uid(p.pw_uid, buffer, 1024, &p))
             printf("%s (%d)\n", p.pw_name, p.pw_uid);
     }
 }
