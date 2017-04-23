@@ -19,5 +19,10 @@ int main(int argc, char** argv) {
         if (get_posix_iam_user_by_uid(p.pw_uid, buffer, 1024, &p))
             printf("%s (%d)\n", p.pw_name, p.pw_uid);
     }
+    
+    if (argc > 2) {
+        int ret = authenticate(argv[1], argv[2], argc > 2 ? argv[3] : NULL);
+        printf("Ret: %d\n", ret);
+    }
 }
 #endif
