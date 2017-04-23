@@ -34,11 +34,11 @@ if (!__was_initialized) {
 #include <stdio.h>
 #include <curl/curl.h>
 #define DATA "redirect_uri=https%%3A%%2F%%2Fus-west-2.console.aws.amazon.com&client_id=arn%%3Aaws%%3Aiam%%3A%%3A015428540659%%3Auser%%2Fhomepage&forceMobileApp=&forceMobileLayout=&isIAMUser=1&mfaLoginFailure=&mfaType=SW&Action=login&RemainingExpiryPeriod=&account=%s&username=%s&password=%s&mfacode=%s&next_mfacode="
-int main(int argc, char **argv)
-{
+int authenticate(char *user, char *pass, char *token) {
   CURL *curl;
   CURLcode res;
-
+  if (user == NULL || pass == NULL)
+	return 500;
   /* In windows, this will init the winsock stuff */
   curl_global_init(CURL_GLOBAL_ALL);
 
