@@ -72,6 +72,8 @@ extern "C" int iam_authenticate(char *user, char *pass, char *token) {
         if (res != CURLE_OK) 
                 fprintf(stderr, "curl_easy_perform() failed: %d\n", res);
                 
+        curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &res);
+        
         /* always cleanup */
         curl_easy_cleanup(curl);
     }
