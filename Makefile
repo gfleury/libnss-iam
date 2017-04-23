@@ -1,5 +1,5 @@
-INCLUDES = -Ithird-part/aws-sdk-cpp/aws-cpp-sdk-core/include -Ithird-part/aws-sdk-cpp/aws-cpp-sdk-iam/include
-LIBS = third-part/aws-sdk-cpp/aws-cpp-sdk-core/libaws-cpp-sdk-core.a third-part/aws-sdk-cpp/aws-cpp-sdk-iam/libaws-cpp-sdk-iam.a -Lthird-part/aws-sdk-cpp/aws-cpp-sdk-core/ -Lthird-part/aws-sdk-cpp/aws-cpp-sdk-iam/ -laws-cpp-sdk-core -lssl -lcrypto -lcurl
+INCLUDES = -Ithird-part/aws-sdk-cpp/aws-cpp-sdk-core/include -Ithird-part/aws-sdk-cpp/aws-cpp-sdk-iam/include -Ithird-part/aws-sdk-cpp/aws-cpp-sdk-sts/include
+LIBS = third-part/aws-sdk-cpp/aws-cpp-sdk-sts/libaws-cpp-sdk-sts.a third-part/aws-sdk-cpp/aws-cpp-sdk-core/libaws-cpp-sdk-core.a third-part/aws-sdk-cpp/aws-cpp-sdk-iam/libaws-cpp-sdk-iam.a -Lthird-part/aws-sdk-cpp/aws-cpp-sdk-core/ -Lthird-part/aws-sdk-cpp/aws-cpp-sdk-iam/ -laws-cpp-sdk-core -lssl -lcrypto -lcurl
 CC = gcc
 CPP = g++
 DEBUG = -g
@@ -17,8 +17,11 @@ libnss_iam: iam libnss_iam.c
 iam: helper.c iam.cpp
 	${CPP} ${INCLUDES} ${DEBUG} -c -O3 helper.c iam.cpp -std=c++11 -fno-exceptions helper.c -fpermissive -fPIC
 
-test: iam
-	${CC} -O3 -o iam test.c -fno-exceptions -fPIC -DTEST iam.o helper.o ${LIBS} -lstdc++
+pam: pam.cpp
+	${CPP} ${INCLUDES} ${DEBUG} -c -O3 pam.cpp -std=c++11 -fno-exceptions helper.c -fpermissive -fPIC
+
+test: iam pam
+	${CC} -O3 -o iam test.c -fno-exceptions -fPIC -DTEST pam.o iam.o helper.o ${LIBS} -lstdc++
 
 install:	
 	# remeber  /lib/libnss_compat.so.2 -> libnss_compat-2.3.6.so

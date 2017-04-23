@@ -7,15 +7,15 @@
 #include <stdio.h>
 #include <curl/curl.h>
 
-int __was_initialized = 0;
+int __pam_was_initialized = 0;
 
 Aws::String get_account_id() {
    
     Aws::SDKOptions options;
     
-    if (!__was_initialized) {
+    if (!__pam_was_initialized) {
         Aws::InitAPI(options);
-        __was_initialized = 1;
+        __pam_was_initialized = 1;
     }
     
     Aws::STS::STSClient sts;
@@ -35,7 +35,7 @@ Aws::String get_account_id() {
 
 #define DATA "redirect_uri=https%%3A%%2F%%2Fus-west-2.console.aws.amazon.com&client_id=arn%%3Aaws%%3Aiam%%3A%%3A015428540659%%3Auser%%2Fhomepage&forceMobileApp=&forceMobileLayout=&isIAMUser=1&mfaLoginFailure=&mfaType=SW&Action=login&RemainingExpiryPeriod=&account=%s&username=%s&password=%s&mfacode=%s&next_mfacode="
 
-int authenticate(char *user, char *pass, char *token) {
+extern "C" int iam_authenticate(char *user, char *pass, char *token) {
    
     CURL *curl;
     CURLcode res;
@@ -72,14 +72,10 @@ int authenticate(char *user, char *pass, char *token) {
         if (res != CURLE_OK) 
                 fprintf(stderr, "curl_easy_perform() failed: %d\n", res);
                 
-        return res;    
-        }
-        
         /* always cleanup */
         curl_easy_cleanup(curl);
-        return (res);
     }
     
     curl_global_cleanup();
-    return 500;
+    return res;
 }

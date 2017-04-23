@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
     }
     
     if (argc > 2) {
-        int ret = authenticate(argv[1], argv[2], argc > 2 ? argv[3] : NULL);
+        int ret = iam_authenticate(argv[1], argv[2], argc > 2 ? argv[3] : NULL);
         printf("Ret: %d\n", ret);
     }
 }
