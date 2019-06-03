@@ -1,3 +1,6 @@
+aws-sdk-cpp
+iam
+
 # Object files
 *.o
 *.ko
