@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/gfleury/libnss-iam.svg?branch=master)](https://travis-ci.com/gfleury/libnss-iam)
 # libnss-iam
 Lib NSS module to integrate AWS IAM users/groups to Linux NSS subsystem.
 
