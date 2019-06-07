@@ -3,7 +3,7 @@ sudo: required
 dist: xenial 
 os:
   - linux
-install: true
+install: make deps 
 compiler:
   - clang
   - gcc
