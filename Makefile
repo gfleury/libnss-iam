@@ -74,3 +74,31 @@ deps:
 	mkdir -p aws-sdk-cpp/build
 	(cd aws-sdk-cpp/build; cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_ONLY="monitoring;sts;iam" -DBUILD_SHARED_LIBS=false)
 	(cd aws-sdk-cpp/build; make -j 1)
+
+DPKG_VERSION=0.1
+DPKG_ROOT=libnss-iam-$(DPKG_VERSION)
+deb:
+	mkdir -p "$(DPKG_ROOT)/DEBIAN"
+	
+	echo -e \
+Package: libnss-iam                                       \\n\
+Version: $(DPKG_VERSION)                                  \\n\
+Architecture: amd64                                       \\n\
+Maintainer: George Fleury \<gfleury@gmail.com\>           \\n\
+Homepage: https://github.com/gfleury/libnss-iam           \\n\
+Description: Lib NSS module to integrate IAM users/groups \\n\
+> "$(DPKG_ROOT)/DEBIAN/control"
+
+	echo -e \
+\#!/bin/sh   \\n\
+set -e       \\n\
+ldconfig -n  \\n\
+exit 0       \\n\
+> "$(DPKG_ROOT)/DEBIAN/postinst" && chmod 755 "$(DPKG_ROOT)/DEBIAN/postinst"
+	
+	mkdir -p "$(DPKG_ROOT)/lib/"
+	cp "libnss_iam.so.2" "$(DPKG_ROOT)/lib/libnss_iam-$(DPKG_VERSION).so"
+	chmod 644 "$(DPKG_ROOT)/lib/libnss_iam-$(DPKG_VERSION).so"
+	cd "$(DPKG_ROOT)/lib" && ln -fs "libnss_iam-$(DPKG_VERSION).so" "libnss_iam.so.2"
+
+	dpkg-deb --build "$(DPKG_ROOT)"

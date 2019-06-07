@@ -17,11 +17,18 @@ Build libnss_iam.so.2:
 libnss-iam$ make
 ```
 
+Build .deb package
+```
+# This can be done on an ubuntu 16.04 or 18.04 host
+libnss-iam$ make deb
+```
+
 ## Docker Simulator
 A simulator is provided to test installing and using libnss_iam.so.2
 
 AWS: You'll need an IAM user with ssh public key set
-```# The user level AWS shared creds file should have [default] set correctly in `~/.aws/credentials`
+```
+# The user level AWS shared creds file should have [default] set correctly in '~/.aws/credentials'
 [default]
 assumed_role = False
 aws_access_key_id = ...
@@ -37,8 +44,11 @@ Start/Configure the simulator:
 libnss-iam/docker$ make docker-build
 libnss-iam/docker$ make docker-shell
 
-# install libnss_iam.so.2
+# install libnss_iam.so.2 (Makefile)
 root@bastion-service:/libnss-iam# make install
+or
+# install libnss_iam.so.2 (.deb package)
+root@bastion-service:/# dpkg -i /libnss-iam/libnss-iam-0.1.deb
 
 # Start sshd
 root@bastion-service:/libnss-iam# /usr/sbin/sshd -d
