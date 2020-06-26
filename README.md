@@ -3,7 +3,7 @@
 Lib NSS module to integrate AWS IAM users/groups to Linux NSS subsystem.
 
 ## Building
-A docker ubuntu 16.04 environment is used to build the AWS c++ sdk:
+A docker ubuntu 20.04 environment is used to build the AWS c++ sdk:
 ```
 # Create and launch the sdk build environment
 libnss-iam$ make docker-build
@@ -14,14 +14,17 @@ $USER@$aws-sdk-builder:~/libnss-iam$ make deps
 
 Build libnss_iam.so.2:
 ```
-# This can be done on an ubuntu 16.04 or 18.04 host
-libnss-iam$ make
+$USER@$aws-sdk-builder:~/libnss-iam$ make
+```
+
+Build iam cli:
+```
+$USER@$aws-sdk-builder:~/libnss-iam$ make test
 ```
 
 Build .deb package
 ```
-# This can be done on an ubuntu 16.04 or 18.04 host
-libnss-iam$ make deb
+$USER@$aws-sdk-builder:~/libnss-iam$ make deb
 ```
 
 ## Docker Simulator

@@ -100,5 +100,7 @@ exit 0       \\n\
 	cp "libnss_iam.so.2" "$(DPKG_ROOT)/lib/libnss_iam-$(DPKG_VERSION).so"
 	chmod 644 "$(DPKG_ROOT)/lib/libnss_iam-$(DPKG_VERSION).so"
 	cd "$(DPKG_ROOT)/lib" && ln -fs "libnss_iam-$(DPKG_VERSION).so" "libnss_iam.so.2"
+	mkdir -p "$(DPKG_ROOT)/usr/local/bin"
+	cp "iam" "$(DPKG_ROOT)/usr/local/bin/iam"
 
 	dpkg-deb --build "$(DPKG_ROOT)"
