@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <curl/curl.h>
 
+#include "pam.h"
+
 int __pam_was_initialized = 0;
 
 Aws::String get_account_id() {
@@ -35,7 +37,7 @@ Aws::String get_account_id() {
 
 #define DATA "redirect_uri=https%%3A%%2F%%2Fus-west-2.console.aws.amazon.com&client_id=arn%%3Aaws%%3Aiam%%3A%%3A015428540659%%3Auser%%2Fhomepage&forceMobileApp=&forceMobileLayout=&isIAMUser=1&mfaLoginFailure=&mfaType=SW&Action=login&RemainingExpiryPeriod=&account=%s&username=%s&password=%s&mfacode=%s&next_mfacode="
 
-extern "C" int iam_authenticate(char *user, char *pass, char *token) {
+int iam_authenticate(char *user, char *pass, char *token) {
    
     CURL *curl;
     CURLcode res;

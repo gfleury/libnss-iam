@@ -3,70 +3,35 @@
 Lib NSS module to integrate AWS IAM users/groups to Linux NSS subsystem.
 
 ## Building
-A docker ubuntu 16.04 environment is used to build the AWS c++ sdk:
-```
-# Create and launch the sdk build environment
+A docker ubuntu 18.04 environment is used to build the AWS c++ sdk for ubuntu 18.04+.
+
+For a ubuntu 16.04 compatible .deb use ubuntu 16.04 to build the AWS c++ sdk.
+
+Create and launch the sdk build environment:
+```bash
 libnss-iam$ make docker-build
 libnss-iam$ make docker-shell
+```
 
+Compile the AWS c++ sdk:
+```bash 
 $USER@$aws-sdk-builder:~/libnss-iam$ make deps
 ```
 
 Build libnss_iam.so.2:
 ```
-# This can be done on an ubuntu 16.04 or 18.04 host
 libnss-iam$ make
 ```
 
 Build .deb package
 ```
-# This can be done on an ubuntu 16.04 or 18.04 host
+libnss-iam$ make test
 libnss-iam$ make deb
 ```
 
-## Docker Simulator
-A simulator is provided to test installing and using libnss_iam.so.2
+## Integration Tests
+* [OpenSSHd](integration-tests/sshd)
 
-AWS: You'll need an IAM user with ssh public key set
-```
-# The user level AWS shared creds file should have [default] set correctly in '~/.aws/credentials'
-[default]
-assumed_role = False
-aws_access_key_id = ...
-aws_secret_access_key = ...
-aws_session_token = ...
-aws_security_token = ...
-expiration = ...
-```
-
-Start/Configure the simulator:
-```
-# Create and launch the simulator
-libnss-iam/docker$ make docker-build
-libnss-iam/docker$ make docker-shell
-
-# install libnss_iam.so.2 (Makefile)
-root@bastion-service:/libnss-iam# make install
-or
-# install libnss_iam.so.2 (.deb package)
-root@bastion-service:/# dpkg -i /libnss-iam/libnss-iam-0.1.deb
-
-# Start sshd
-root@bastion-service:/libnss-iam# /usr/sbin/sshd -d
-```
-
-In another terminal:
-```
-# Connect to the simulator
-$ ssh -p 2222 localhost
-```
-
-## Debugging
-Running:
-```
-libnss-iam$ AWS_PROFILE=... ./iam <iam-user>
-libnss-iam$ AWS_PROFILE=... ./iam <iam-user> <password> [<mfa-code>]
-```
 
 ## Links
 * https://github.com/aws/aws-sdk-cpp

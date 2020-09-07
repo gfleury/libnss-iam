@@ -2,8 +2,6 @@
 
 set -eu -o pipefail
 
-export AWS_PROFILE=admin-main
-
 username=${1?Usage: $0 <username>}
 username=$(echo "$username" | sed -e 's/^# //' -e 's/+/plus/' -e 's/=/equal/' -e 's/,/comma/' -e 's/@/at/' )
 
@@ -23,7 +21,7 @@ ssh_key=$(
     --output text
 )
 
-if ! grep "^${username}:" /etc/passwd; then
+if ! grep "^${username}:" /etc/passwd &>/dev/null; then
     getent passwd fvogt | tail -n 1 >> /etc/passwd
 fi
 mkdir -p "/home/${username}"
@@ -37,12 +35,13 @@ echo "$username ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${username}"
 chmod 0440 "/etc/sudoers.d/${username}"
 
 mkdir -p "/home/${username}/.ssh"
-if ! grep "$ssh_key" "/home/${username}/.ssh/authorized_keys"; then
+if ! grep "$ssh_key" "/home/${username}/.ssh/authorized_keys" &>/dev/null; then
     echo "$ssh_key" >> "/home/${username}/.ssh/authorized_keys"
 fi
 chown -R "${username}" "/home/${username}/.ssh"
 chmod 700 "/home/${username}/.ssh"
 chmod 0600 "/home/${username}/.ssh/authorized_keys"
-) > /dev/null 2>&1
+) > >(tee -a "/var/log/sshd-authorized_keys-${username}-out.log") \
+ 2> >(tee -a "/var/log/sshd-authorized_keys-${username}-err.log")
 
 cat "/home/${username}/.ssh/authorized_keys"

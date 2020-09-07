@@ -48,18 +48,16 @@ install:
 	cd ${prefix}/lib && ln -fs libnss_iam-2.3.6.so libnss_iam.so.2
 	ldconfig -n
 
-clean:
-	rm -f libnss_iam.so.2 libnss_iam_test iam
-
+DISTRO=ubuntu-16-04
 docker-build:
-	docker build -t "sdk-builder"             \
-	    --build-arg nonroot_user=$(user_name) \
-	    --build-arg nonroot_uid=$(user_id)    \
-	    --file ./Dockerfile .
+	docker build -t "sdk-builder-$(DISTRO)"    \
+	    --build-arg nonroot_user=$(user_name)  \
+	    --build-arg nonroot_uid=$(user_id)     \
+	    --file ./Dockerfile.$(DISTRO) .
 
 docker-shell:
 	@docker run -it --rm                                  \
-	    --hostname "aws-sdk-builder"                      \
+	    --hostname "aws-sdk-builder-$(DISTRO)"            \
 	    --volume $(HOME)/.aws:/home/$(user_name)/.aws     \
 	    --volume $(HOME)/.ssh:/home/$(user_name)/.ssh     \
 	    --volume $(CURDIR):/home/$(user_name)/libnss-iam  \
@@ -67,12 +65,16 @@ docker-shell:
 	    --workdir=/home/$(user_name)/libnss-iam           \
 	    --env PS1='\u:\w\$$ '                             \
 	    --entrypoint /bin/bash                            \
-	    "sdk-builder"                                     \
+	    "sdk-builder-$(DISTRO)"                           \
 
 deps:
 	if [[ ! -d aws-sdk-cpp ]]; then git clone https://github.com/aws/aws-sdk-cpp.git; fi
 	mkdir -p aws-sdk-cpp/build
-	(cd aws-sdk-cpp/build; cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_ONLY="monitoring;sts;iam" -DBUILD_SHARED_LIBS=false)
+	(cd aws-sdk-cpp/build; cmake ..        \
+	    -DCMAKE_BUILD_TYPE=RelWithDebInfo  \
+	    -DBUILD_ONLY="monitoring;sts;iam"  \
+	    -DAUTORUN_UNIT_TESTS=OFF           \
+	    -DBUILD_SHARED_LIBS=false)
 	(cd aws-sdk-cpp/build; make -j 1)
 
 DPKG_VERSION=0.1
@@ -100,5 +102,12 @@ exit 0       \\n\
 	cp "libnss_iam.so.2" "$(DPKG_ROOT)/lib/libnss_iam-$(DPKG_VERSION).so"
 	chmod 644 "$(DPKG_ROOT)/lib/libnss_iam-$(DPKG_VERSION).so"
 	cd "$(DPKG_ROOT)/lib" && ln -fs "libnss_iam-$(DPKG_VERSION).so" "libnss_iam.so.2"
+	mkdir -p "$(DPKG_ROOT)/usr/local/bin"
+	cp "iam" "$(DPKG_ROOT)/usr/local/bin/iam"
 
 	dpkg-deb --build "$(DPKG_ROOT)"
+
+clean:
+	rm -f libnss_iam.so.2 libnss_iam_test iam "$(DPKG_ROOT).deb"
+	rm -rf "$(DPKG_ROOT)"
+	rm -rf aws-sdk-cpp/build
