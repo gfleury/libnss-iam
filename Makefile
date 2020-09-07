@@ -48,7 +48,7 @@ install:
 	cd ${prefix}/lib && ln -fs libnss_iam-2.3.6.so libnss_iam.so.2
 	ldconfig -n
 
-DISTRO=ubuntu-16-04
+DISTRO=ubuntu-18-04
 docker-build:
 	docker build -t "sdk-builder-$(DISTRO)"    \
 	    --build-arg nonroot_user=$(user_name)  \

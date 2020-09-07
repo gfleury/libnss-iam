@@ -1,6 +1,6 @@
 SHELL=/bin/bash
 
-DISTRO=ubuntu-16-04
+DISTRO=ubuntu-18-04
 
 docker-build:
 	docker build -t "sshd-worker-$(DISTRO)" --file ./Dockerfile.$(DISTRO) .
