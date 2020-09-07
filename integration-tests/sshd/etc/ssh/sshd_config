@@ -1,9 +1,9 @@
-AuthorizedKeysCommand /opt/authorized-keys-command.sh
+AuthorizedKeysCommand /opt/bin/authorized-keys-command.sh
 AuthorizedKeysCommandUser root
 
 ChallengeResponseAuthentication yes
 
-UsePAM yes
+UsePAM no
 AuthenticationMethods publickey
 
 X11Forwarding yes

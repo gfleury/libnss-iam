@@ -36,21 +36,21 @@ extern "C" enum nss_status get_posix_iam_user(char *buffer, int buflen, struct p
             char shell[] = "/bin/bash";
             char pwd[] = "*";
             int bytes = iam_user.GetUserName().size() + 1 > __LEN ? __LEN : iam_user.GetUserName().size() + 1, offset = 0;
-            p->pw_name = memcpy(buffer + offset, iam_user.GetUserName().c_str(), bytes);
+            p->pw_name = (char*)memcpy(buffer + offset, iam_user.GetUserName().c_str(), bytes);
             offset += bytes;
             p->pw_uid = hash(iam_user.GetUserId().c_str());
             p->pw_gid = 10; /* wheel harded */
             bytes = iam_user.GetArn().size() + 1 > __LEN ? __LEN : iam_user.GetArn().size() + 1;
-            p->pw_gecos = memcpy(buffer + offset, iam_user.GetArn().c_str(), bytes);
+            p->pw_gecos = (char*)memcpy(buffer + offset, iam_user.GetArn().c_str(), bytes);
             offset += bytes;
             bytes = home.size() + 1 > __LEN ? __LEN : home.size() + 1;
-            p->pw_dir = memcpy(buffer + offset, home.c_str(), bytes);
+            p->pw_dir = (char*)memcpy(buffer + offset, home.c_str(), bytes);
             offset += bytes;
             bytes = sizeof (shell) > __LEN ? __LEN : sizeof (shell);
-            p->pw_shell = memcpy(buffer + offset, shell, bytes);
+            p->pw_shell = (char*)memcpy(buffer + offset, shell, bytes);
             offset += bytes;
             bytes = sizeof (pwd) > __LEN ? __LEN : sizeof (pwd);
-            p->pw_passwd = memcpy(buffer + offset, pwd, buflen - offset);
+            p->pw_passwd = (char*)memcpy(buffer + offset, pwd, buflen - offset);
         }
         return NSS_STATUS_SUCCESS;
     }
@@ -69,21 +69,21 @@ extern "C" enum nss_status get_posix_iam_user_by_uid(uid_t uid, char *buffer, in
             char shell[] = "/bin/bash";
             char pwd[] = "*";
             int bytes = iam_user.GetUserName().size() + 1 > __LEN ? __LEN : iam_user.GetUserName().size() + 1, offset = 0;
-            p->pw_name = memcpy(buffer + offset, iam_user.GetUserName().c_str(), bytes);
+            p->pw_name = (char*)memcpy(buffer + offset, iam_user.GetUserName().c_str(), bytes);
             offset += bytes;
             p->pw_uid = hash(iam_user.GetUserId().c_str());
             p->pw_gid = 10; /* wheel harded */
             bytes = iam_user.GetArn().size() + 1 > __LEN ? __LEN : iam_user.GetArn().size() + 1;
-            p->pw_gecos = memcpy(buffer + offset, iam_user.GetArn().c_str(), bytes);
+            p->pw_gecos = (char*)memcpy(buffer + offset, iam_user.GetArn().c_str(), bytes);
             offset += bytes;
             bytes = home.size() + 1 > __LEN ? __LEN : home.size() + 1;
-            p->pw_dir = memcpy(buffer + offset, home.c_str(), bytes);
+            p->pw_dir = (char*)memcpy(buffer + offset, home.c_str(), bytes);
             offset += bytes;
             bytes = sizeof (shell) > __LEN ? __LEN : sizeof (shell);
-            p->pw_shell = memcpy(buffer + offset, shell, bytes);
+            p->pw_shell = (char*)memcpy(buffer + offset, shell, bytes);
             offset += bytes;
             bytes = sizeof (pwd) > __LEN ? __LEN : sizeof (pwd);
-            p->pw_passwd = memcpy(buffer + offset, pwd, buflen - offset);
+            p->pw_passwd = (char*)memcpy(buffer + offset, pwd, buflen - offset);
         }
         return NSS_STATUS_SUCCESS;
     }

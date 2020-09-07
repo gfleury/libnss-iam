@@ -6,6 +6,11 @@
  */
 #ifdef TEST
 #include <string.h>
+#include <stdio.h>
+
+#include "headers.h" 
+#include "libnss_iam.h"
+#include "pam.h"
 
 int main(int argc, char** argv) {
     char buffer[1024];
